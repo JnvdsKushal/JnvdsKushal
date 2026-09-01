@@ -1,9 +1,9 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366F1,100:8B5CF6&height=220&section=header&text=Jnvds%20Kushal&fontSize=48&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=Full-Stack%20Developer%20%26%20Software%20Engineer&descAlignY=55&descSize=18" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=0:6366F1,100:8B5CF6&height=220&section=header&text=Jnvds%20Kushal&fontSize=48&fontColor=FFFFFF&animation=fadeIn&fontAlignY=35&desc=Full-Stack%20Developer%20and%20Software%20Engineer&descAlignY=55&descSize=18" width="100%"/>
 
 <a href="https://github.com/JnvdsKushal">
-  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=20&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&width=700&height=45&lines=Blockchain+%7C+IoT+%7C+Mobile;Building+scalable%2C+real-world+software;Bridging+code%2C+devices+%26+decentralized+tech" alt="Typing SVG" />
+  <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=600&size=20&duration=3000&pause=1000&color=6366F1&center=true&vCenter=true&width=700&height=45&lines=Blockchain+%7C+IoT+%7C+Mobile;Building+scalable%2C+real-world+software;Bridging+code%2C+devices+and+decentralized+tech" alt="Typing SVG" />
 </a>
 
 </div>
@@ -66,6 +66,7 @@ I like combining different technologies with a clear purpose, and I'm constantly
 
 <br/>
 
+## Featured Projects
 
 <!--
   Add your featured projects here when ready, using a format like:
