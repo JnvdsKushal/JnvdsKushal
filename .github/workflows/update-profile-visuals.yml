@@ -45,32 +45,58 @@ jobs:
             cp dist/github-contribution-grid-snake.svg ./github-contribution-grid-snake.svg
           fi
 
-      - name: Fetch stats cards (keeps the previous file if a fetch fails)
+      - name: Fetch stats cards (keeps the previous file, or writes a placeholder, if a fetch fails)
         run: |
+          placeholder() {
+            out="$1"
+            label="$2"
+            cat > "$out" << EOF
+          <svg xmlns="http://www.w3.org/2000/svg" width="420" height="120">
+            <rect width="100%" height="100%" fill="#FFFFFF" stroke="#E4E2E2" rx="10"/>
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Segoe UI, sans-serif" font-size="13" fill="#6366F1">$label</text>
+          </svg>
+          EOF
+          }
+
           fetch() {
             url="$1"
             out="$2"
+            label="$3"
             tmp="$(mktemp)"
-            if curl -fsSL --retry 3 --retry-delay 5 --max-time 25 "$url" -o "$tmp" && grep -q "<svg" "$tmp"; then
+            if curl -fsSL --retry 5 --retry-delay 8 --retry-all-errors --max-time 30 "$url" -o "$tmp" && grep -q "<svg" "$tmp"; then
               mv "$tmp" "$out"
               echo "updated $out"
             else
-              echo "fetch failed for $out — keeping existing version"
               rm -f "$tmp"
+              if [ -f "$out" ]; then
+                echo "fetch failed for $out — keeping existing version"
+              else
+                echo "fetch failed for $out — writing placeholder until next sync"
+                placeholder "$out" "$label"
+              fi
             fi
           }
 
           OWNER="${{ github.repository_owner }}"
 
-          fetch "https://github-readme-stats.vercel.app/api?username=${OWNER}&show_icons=true&theme=default&bg_color=FFFFFF&title_color=6366F1&icon_color=8B5CF6&text_color=24292E&border_color=E4E2E2&border_radius=10&count_private=false" stats-card.svg
-          fetch "https://github-readme-stats.vercel.app/api/top-langs/?username=${OWNER}&layout=compact&theme=default&bg_color=FFFFFF&title_color=6366F1&text_color=24292E&border_color=E4E2E2&border_radius=10&langs_count=8" top-langs.svg
-          fetch "https://streak-stats.demolab.com/?user=${OWNER}&theme=default&background=FFFFFF&ring=6366F1&fire=8B5CF6&currStreakLabel=6366F1&sideLabels=24292E&currStreakNum=24292E&sideNums=24292E&dates=6B7280&border=E4E2E2&border_radius=10" streak-stats.svg
+          fetch "https://github-readme-stats.vercel.app/api?username=${OWNER}&show_icons=true&theme=default&bg_color=FFFFFF&title_color=6366F1&icon_color=8B5CF6&text_color=24292E&border_color=E4E2E2&border_radius=10&count_private=false" stats-card.svg "Stats card syncing — refreshes automatically within a day"
+          fetch "https://github-readme-stats.vercel.app/api/top-langs/?username=${OWNER}&layout=compact&theme=default&bg_color=FFFFFF&title_color=6366F1&text_color=24292E&border_color=E4E2E2&border_radius=10&langs_count=8" top-langs.svg "Top languages syncing — refreshes automatically within a day"
+          fetch "https://streak-stats.demolab.com/?user=${OWNER}&theme=default&background=FFFFFF&ring=6366F1&fire=8B5CF6&currStreakLabel=6366F1&sideLabels=24292E&currStreakNum=24292E&sideNums=24292E&dates=6B7280&border=E4E2E2&border_radius=10" streak-stats.svg "Streak stats syncing — refreshes automatically within a day"
+
+          if [ ! -f github-contribution-grid-snake.svg ]; then
+            echo "snake SVG missing — writing placeholder until next sync"
+            placeholder github-contribution-grid-snake.svg "Contribution snake syncing — refreshes automatically within a day"
+          fi
 
       - name: Commit and push if anything changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add github-contribution-grid-snake.svg stats-card.svg top-langs.svg streak-stats.svg
+          for f in github-contribution-grid-snake.svg stats-card.svg top-langs.svg streak-stats.svg; do
+            if [ -f "$f" ]; then
+              git add "$f"
+            fi
+          done
           if git diff --staged --quiet; then
             echo "Nothing changed"
           else
