@@ -66,7 +66,6 @@ I like combining different technologies with a clear purpose, and I'm constantly
 
 <br/>
 
-## Featured Projects
 
 <!--
   Add your featured projects here when ready, using a format like:
